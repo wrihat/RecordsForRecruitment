@@ -343,16 +343,10 @@ vector<int> maxSlidingWindow(vector<int>& nums, int k) {
 
 ### leetcode 76 最小覆盖子串
 题目描述：
-
-<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">给你一个字符串 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">s</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 、一个字符串 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">t</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 。返回 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">s</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 中涵盖 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">t</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 所有字符的最小子串。如果 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">s</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 中不存在涵盖 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">t</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 所有字符的子串，则返回空字符串 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">""</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 。</font>
-
-**<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">注意：</font>**
-
-+ <font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">对于</font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">t</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">中重复字符，我们寻找的子字符串中该字符数量必须不少于</font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">t</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">中该字符数量。</font>
-+ <font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">如果 </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">s</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> 中存在这样的子串，我们保证它是唯一的答案。</font>
-
-**<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">示例 1：</font>**
-
+给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。\
+注意：
+对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量。
+如果 s 中存在这样的子串，我们保证它是唯一的答案。
 ```plain
 输入：s = "ADOBECODEBANC", t = "ABC"
 输出："BANC"
@@ -406,18 +400,16 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 ## 普通数组
 ### leetcode 53 最大子数组和
 题目描述：
-
-<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">给你一个整数数组</font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font>`<font style="color:rgba(38, 38, 38, 0.75);background-color:rgb(240, 240, 240);">nums</font>`<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);"> </font><font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。</font>
-
-**<font style="background-color:rgb(240, 240, 240);">子数组</font>**<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">是数组中的一个连续部分。</font>
-
-**<font style="color:rgb(38, 38, 38);background-color:rgb(240, 240, 240);">示例 1：</font>**
+给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+子数组
+是数组中的一个连续部分。
 
 ```plain
 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
 输出：6
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 ```
+
 
 
 
