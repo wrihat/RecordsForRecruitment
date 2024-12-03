@@ -410,8 +410,44 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 ```
 
+### leetcode 56 合并区间
+题目描述：
+以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
+示例 1：
+输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
 
-
+```C++
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if(intervals.size() == 0) return {};
+        vector<vector<int>> ans;
+        sort(intervals.begin(), intervals.end(), [](vector<int>& nums1, vector<int>&nums2){
+            if(nums1[0] < nums2[0]){
+                return true;
+            } else if(nums1[0] == nums2[0]){
+                return nums1[1] < nums2[1];
+            }  else return false;
+        });
+        sort(intervals.begin(), intervals.end());
+        for(int i = 0; i < intervals.size();i++) {
+            cout<<"left: "<<intervals[i][0]<<", right: "<<intervals[i][1]<<endl;
+        }
+        ans.push_back(intervals[0]);
+        int lastRight = ans[0][1];
+        for(int i = 1; i < intervals.size(); i++) {
+            cout<<"left: "<<ans.back()[0]<<", right: "<<ans.back()[1]<<endl;
+            if(intervals[i][0] > lastRight) {
+                ans.push_back(intervals[i]); 
+                lastRight = intervals[i][1]; 
+            } else {
+                lastRight = max(lastRight, intervals[i][1]);
+                ans.back()[1] = lastRight;
+            }
+        }
+        return ans;
+    }
+```
 
 
 
