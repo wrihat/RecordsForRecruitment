@@ -396,7 +396,6 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 
 
 
-
 ## 普通数组
 ### leetcode 53 最大子数组和
 题目描述：
@@ -410,6 +409,24 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 ```
 
+```cpp
+    int maxSubArray(vector<int>& nums) {
+        int curSum = nums[0];
+        int maxSum = nums[0];
+        int curIndex = 1;
+        while(curIndex < nums.size()) {
+            if(curSum + nums[curIndex] > nums[curIndex] ) {
+                curSum += nums[curIndex];
+            } else {
+                curSum = nums[curIndex];
+            }
+            if(curSum >= maxSum) maxSum = curSum;  //注意要在判断晚curSum + nums[curIndex]与nums[curIndex]和project
+ 
+            curIndex++;
+        }
+        return maxSum;
+    }   
+```
 
 
 
