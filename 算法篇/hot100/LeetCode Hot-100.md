@@ -396,7 +396,6 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 
 
 
-
 ## 普通数组
 ### leetcode 53 最大子数组和
 题目描述：
@@ -410,7 +409,95 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 ```
 
+```cpp
+    int maxSubArray(vector<int>& nums) {
+        int curSum = nums[0];
+        int maxSum = nums[0];
+        int curIndex = 1;
+        while(curIndex < nums.size()) {
+            if(curSum + nums[curIndex] > nums[curIndex] ) {
+                curSum += nums[curIndex];
+            } else {
+                curSum = nums[curIndex];
+            }
+            if(curSum >= maxSum) maxSum = curSum;  //注意要在判断晚curSum + nums[curIndex]与nums[curIndex]和project
+ 
+            curIndex++;
+        }
+        return maxSum;
+    }   
+```
 
+### leetcode 56 合并区间
+
+
+### leetcode 189 轮转数组
+题目描述：
+给定一个整数数组 nums，将数组中的元素向右轮转 k 个位置，其中 k 是非负数。
+>示例 1: \
+>输入: nums = [1,2,3,4,5,6,7], k = 3 \
+>输出: [5,6,7,1,2,3,4] \
+>解释: \
+>向右轮转 1 步: [7,1,2,3,4,5,6] \
+>向右轮转 2 步: [6,7,1,2,3,4,5] \
+>向右轮转 3 步: [5,6,7,1,2,3,4] \
+
+解题:
+Method 1:
+```C++
+void rotate(vector<int>& nums, int k) {
+    vector<int> ans(nums.size());
+    k = k  % nums.size();
+    for(int i = 0; i < nums.size();i++) {
+        ans[(i + k) % nums.size() ] = nums[i];
+    }
+    for(int i = 0; i < ans.size(); i++) {
+        nums[i] = ans[i];
+    }
+}
+```
+Method 2
+```C++
+    void rotate(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+        int count = gcd(k, n);
+        for(int start = 0; start < count; start++) {
+            int cur = start;
+            int temp = nums[cur];
+            do{
+                int nextIndext = (cur + k) % n;
+                swap(nums[nextIndext], temp);
+                cur = nextIndext;
+            }while(cur != start);
+        }
+    }
+```
+Method 3
+```C++
+    void reverse(vector<int>& nums, int start, int end) {
+        while(start < end) {
+            swap(nums[start], nums[end]);
+            start++;
+            end--;
+        }
+    }
+    void rotate(vector<int>& nums, int k) {
+        k = k % nums.size();
+        reverse(nums, 0, nums.size() - 1); //翻转整个数组
+        reverse(nums, 0, k - 1);  //翻转前k个元素
+        reverse(nums, k, nums.size() - 1); //翻转后面的元素
+    }
+```
+
+### leetcode 238 除自身意外数组的乘积
+题目描述：
+给你一个整数数组 nums，返回 数组 answer ，其中 answer[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积 。
+题目数据 保证 数组 nums之中任意元素的全部前缀元素和后缀的乘积都在  32 位 整数范围内。
+>请不要使用除法，且在 O(n) 时间复杂度内完成此题。 \
+>示例 1: \
+>输入: nums = [1,2,3,4] \
+>输出: [24,12,8,6]
 
 
 
