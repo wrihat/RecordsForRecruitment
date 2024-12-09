@@ -429,7 +429,38 @@ bool checkIfMatch(unordered_map<char, int>& sCharMap, unordered_map<char, int>& 
 ```
 
 ### leetcode 56 合并区间
-
+题目描述：
+以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
+示例 1: 
+输入: intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+题解: 
+```C++
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>> ans;
+        if(intervals.size() == 0) return ans;
+        sort(intervals.begin(), intervals.end(), [](const vector<int>& nums1, const vector<int>& nums2){
+            if(nums1[0] != nums2[0]) {
+                return nums1[0] < nums2[0];
+            } else {
+                return nums1[1] < nums2[1];
+            }
+        });
+        ans.push_back(intervals[0]);
+        int lastRight = intervals[0][1];
+        for(int i = 1; i < intervals.size();i++) {
+            if(intervals[i][0] > lastRight) {
+                ans.push_back(intervals[i]);
+                lastRight = intervals[i][1];
+            } else {
+                lastRight = max(lastRight, intervals[i][1]);
+                ans.back()[1] = lastRight;
+            }
+        }
+        return ans;
+    }
+```
 
 ### leetcode 189 轮转数组
 题目描述：
@@ -498,7 +529,27 @@ Method 3
 >示例 1: \
 >输入: nums = [1,2,3,4] \
 >输出: [24,12,8,6]
+题解: 三角型累乘
+```C++
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> ans(nums.size(), 1);
+        for(int i = 1; i < nums.size(); i++) {
+            ans[i] = ans[i - 1] * nums[i - 1];
+        }
+        int temp = nums.back();
+        for(int i = nums.size() - 2; i >= 0; i--) {
+            ans[i] = ans[i] * temp;
+            temp *= nums[i];
+        }
+        return ans;
+    }
+```
 
+### leetcode 41 缺失的第一个正数
+题目描述：
+给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
+题解：
 
 
 
