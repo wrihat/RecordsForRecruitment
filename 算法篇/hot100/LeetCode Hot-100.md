@@ -550,6 +550,27 @@ Method 3
 给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
 题解：
+```C++
+   int firstMissingPositive(vector<int>& nums) {
+        int n = nums.size();
+        for(auto& num: nums) {
+            if(num <= 0) {
+                num = n + 1;
+            }
+        }
+        for(auto& num: nums) {
+            if(abs(num) > n) {
+                continue;
+            } else {
+                nums[abs(num) - 1] = - abs(nums[abs(num) - 1]); //关键步骤，将出现过的数对应的下标的数都设为负数
+            }
+        }
+        for(int i = 0; i < nums.size();i++) {
+            if(nums[i] > 0) return i + 1;
+        } 
+        return n + 1;
+    }
+```
 
 
 
