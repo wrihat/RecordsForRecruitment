@@ -550,7 +550,60 @@ Method 3
 给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
 题解：
+```C++
+   int firstMissingPositive(vector<int>& nums) {
+        int n = nums.size();
+        for(auto& num: nums) {
+            if(num <= 0) {
+                num = n + 1;
+            }
+        }
+        for(auto& num: nums) {
+            if(abs(num) > n) {
+                continue;
+            } else {
+                nums[abs(num) - 1] = - abs(nums[abs(num) - 1]); //关键步骤，将出现过的数对应的下标的数都设为负数
+            }
+        }
+        for(int i = 0; i < nums.size();i++) {
+            if(nums[i] > 0) return i + 1;
+        } 
+        return n + 1;
+    }
+```
 
+### leetcode 73 矩阵置零
+题目描述：
+给定一个 m x n 的矩阵，如果一个元素为 0 ，则将其所在行和列的所有元素都设为 0 。请使用 原地 算法。
+示例：
+输入：matrix = [[1,1,1],[1,0,1],[1,1,1]]
+输出：[[1,0,1],[0,0,0],[1,0,1]]
+
+题解：
+```C++
+    void setZeroes(vector<vector<int>>& matrix) {
+        unordered_set<int> usedRows;
+        unordered_set<int> usedCols;
+        for(int i = 0; i < matrix.size();i++) {
+            for(int j = 0; j < matrix[0].size(); j++) {
+                if(matrix[i][j] == 0) {
+                    if(usedRows.find(i) == usedRows.end()) usedRows.insert(i);
+                    if(usedCols.find(j) == usedCols.end()) usedCols.insert(j);
+                } else {
+                    continue;
+                }
+            }
+        }
+        for(int i = 0; i < matrix.size();i++) {
+            for(int j = 0; j < matrix[0].size();j++) {
+                if(usedRows.find(i) != usedRows.end() || usedCols.find(j) != usedCols.end()) matrix[i][j] = 0;
+            }
+        }
+    }
+```
+
+### leetcode 54 螺旋矩阵
+题目描述
 
 
 
