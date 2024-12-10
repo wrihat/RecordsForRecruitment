@@ -572,6 +572,38 @@ Method 3
     }
 ```
 
+### leetcode 73 矩阵置零
+题目描述：
+给定一个 m x n 的矩阵，如果一个元素为 0 ，则将其所在行和列的所有元素都设为 0 。请使用 原地 算法。
+示例：
+输入：matrix = [[1,1,1],[1,0,1],[1,1,1]]
+输出：[[1,0,1],[0,0,0],[1,0,1]]
+
+题解：
+```C++
+    void setZeroes(vector<vector<int>>& matrix) {
+        unordered_set<int> usedRows;
+        unordered_set<int> usedCols;
+        for(int i = 0; i < matrix.size();i++) {
+            for(int j = 0; j < matrix[0].size(); j++) {
+                if(matrix[i][j] == 0) {
+                    if(usedRows.find(i) == usedRows.end()) usedRows.insert(i);
+                    if(usedCols.find(j) == usedCols.end()) usedCols.insert(j);
+                } else {
+                    continue;
+                }
+            }
+        }
+        for(int i = 0; i < matrix.size();i++) {
+            for(int j = 0; j < matrix[0].size();j++) {
+                if(usedRows.find(i) != usedRows.end() || usedCols.find(j) != usedCols.end()) matrix[i][j] = 0;
+            }
+        }
+    }
+```
+
+### leetcode 54 螺旋矩阵
+题目描述
 
 
 
