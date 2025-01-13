@@ -571,7 +571,7 @@ Method 3
         return n + 1;
     }
 ```
-
+## 矩阵
 ### leetcode 73 矩阵置零
 题目描述：
 给定一个 m x n 的矩阵，如果一个元素为 0 ，则将其所在行和列的所有元素都设为 0 。请使用 原地 算法。
@@ -603,31 +603,13 @@ Method 3
 ```
 
 ### leetcode 54 螺旋矩阵
-题目描述 \
-给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。 \
-实例1: 、
-输入：matrix = [[1,2,3],[4,5,6],[7,8,9]] \
-输出：[1,2,3,6,9,8,7,4,5] \
-示例2: \
-输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]] \
-输出：[1,2,3,4,8,12,11,10,9,5,6,7] \
-```C++
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        int directs[4][2] = {[0, 1], [1, 0], [0, -1], [-1, 0]};
-        int sum = matrix.size() * matrix[0].size();
-        int counter = 1;
-        int x = 0, y = 0;
-        vector<vector<bool>> used = {false};
-        while(counter <= sum) {
-            for(int i = 0; i < 4; i++)  {
-                int curx = x + directs[i][0];
-                int cury = y + directs[i][1];
-                for                                                                                                     
-            }
-        }
+题目描述
 
-    }
-```
+
+
+
+
+
 
 
 
