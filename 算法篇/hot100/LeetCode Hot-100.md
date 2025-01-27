@@ -677,9 +677,112 @@ func rotate(matrix [][]int)  {
 示例 1： \
 输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5 \
 输出：true
-
+题解：
+使用二分法，用一层二分即可，两层二分容易找不到第一层起点
 ```C++
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        for(const auto& row: matrix) {
+            // lower_bound()
+            auto iter = lower_bound(row.begin(), row.end(), target);   //lower_bound功能：在一个有序范围内查找第一个不小于给定值的位置
+            if(iter != row.end() && *iter == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+```
 
+## 7 链表
+### 7.1  leetcode 160 相交链表
+题目描述：
+给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。
+图示两个链表在节点 c1 开始相交：
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png)
+题解： 
+```C++
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(headA == nullptr || headB == nullptr) return nullptr;
+        int len1 = 0;
+        int len2 = 0;
+        ListNode* cur1 = headA;
+        ListNode* cur2 = headB;
+        while(cur1 != nullptr) {
+            len1++;
+            cur1 = cur1->next;
+        }
+        while(cur2 != nullptr) {
+            len2++;
+            cur2 = cur2->next;
+        }
+        cur1 = headA;
+        cur2 = headB;
+        int len = 0;
+        if(len1 <= len2) {
+            len = len2 - len1;
+            while(len--) {
+                cur2 = cur2->next;
+            }
+        } else {
+            len = len1 - len2;
+            while(len--) {
+                cur1 = cur1->next;
+            }
+        }
+        while(cur1 != nullptr && cur2 != nullptr && cur1 !=cur2) {
+            cur1 = cur1->next;
+            cur2 = cur2->next;
+        }
+        if(cur1 != nullptr && cur1 == cur2) {
+            return cur1;
+        } else {
+            return nullptr;
+        }
+    }
+```
+更简洁的写法：
+```C++
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(headA == nullptr || headB == nullptr) return nullptr;
+        ListNode* pA = headA;
+        ListNode* pB = headB;
+        while(pA != pB) {
+            pA = pA == nullptr ? headB : pA->next;
+            pB = pB == nullptr ? headA : pB->next;   
+        }
+        return pA;
+    }
+```
+### 7.2 leetcode 206 反转链表
+题目描述：
+给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。 \
+示例 1：
+![](https://assets.leetcode.com/uploads/2021/02/19/rev1ex1.jpg)
+题解：
+```C++
+  ListNode* reverseList(ListNode* head){
+    if(head == nullptr) return nullptr;
+    ListNode* pCur = head;
+    ListNode* pPre = nullptr;
+    while(pCur != nullptr) {
+        ListNode* tmp = pCur->next;
+        pCur->next = pPre;
+        pPre = pCur;
+        pCur = tmp;
+    }
+    return pPre;
+  }
+```
+
+### 7.3 leetcode 234 回文链表
+题目描述：
+给你一个单链表的头节点 head ，请你判断该链表是否为
+回文链表。如果是，返回 true ；否则，返回 false 。 \
+示例 1： \
+![](https://assets.leetcode.com/uploads/2021/03/03/pal1linked-list.jpg)
+输入：head = [1,2,2,1] \
+输出：true \
+题解：
+```C++
 
 ```
 
@@ -697,80 +800,74 @@ func rotate(matrix [][]int)  {
 
 
 
-## 链表
 
 
 
 
 
+## 8 二叉树
 
 
 
 
 
-## 二叉树
 
 
 
 
 
+## 9 图论
 
 
 
 
 
-## 图论
 
 
 
+## 10 回溯
 
 
 
 
 
-## 回溯
 
+## 11 二分查找
 
 
 
 
 
-## 二分查找
 
 
 
 
 
+## 12 栈
 
 
 
 
+## 13 贪心算法
 
-## 栈
 
 
 
 
-## 贪心算法
 
+## 14 动态规划
 
 
 
 
+## 15 多维动态规划
 
-## 动态规划
 
 
 
 
-## 多维动态规划
 
-
-
-
-
-
-## 技巧
+## 16 技巧
 
 
 
