@@ -783,19 +783,219 @@ func rotate(matrix [][]int)  {
 ![](https://assets.leetcode.com/uploads/2021/03/03/pal1linked-list.jpg)
 输入：head = [1,2,2,1] \
 输出：true \
-题解：
+题解： 使用递归方式来进行判断(用数组接收节点值来判断的方法暂不写)
 ```C++
-
+    ListNode* frontPointer;
+    bool recursivelyCheck(ListNode* currentNode) {
+        if(currentNode != nullptr) {
+            if(!recursivelyCheck(currentNode->next)) {
+                return false;
+            }
+            if(currentNode->val != frontPointer->val) {
+                return false;
+            }
+            frontPointer = frontPointer->next;
+        }
+        return true;
+    }
+    bool isPalindrome(ListNode* head) {
+        frontPointer = head;
+        return recursivelyCheck(head);
+    }
 ```
 
+### 7.4 leetcode 141 环形链表
+题目描述：
+给你一个链表的头节点 head ，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。注意：pos 不作为参数进行传递 。仅仅是为了标识链表的实际情况。
+如果链表中存在环 ，则返回 true 。 否则，返回 false 。 \
+示例 1： \
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png)
+题解： 快慢双指针法
+```C++
+    bool hasCycle(ListNode *head) {
+        if(head == nullptr) return false;
+        if(head->next == nullptr) return false;
+        // 使用快慢指针
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while(fast != slow  && fast->next != nullptr && fast->next->next != nullptr) {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        if(fast == slow && fast != nullptr) {
+            return true;
+        } 
+        return false;
+    }
+```
 
+### 7.5 leetcode 142 环形链表||
+题目描述: \
+给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+不允许修改 链表。
+示例1：
+![](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+题解： \
+快慢指针进阶(https://www.programmercarl.com/0142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II.html#%E7%AE%97%E6%B3%95%E5%85%AC%E5%BC%80%E8%AF%BE)
+```C++ 
+    ListNode *detectCycle(ListNode *head) {
+        // 快慢双指针
+        ListNode* fast = head;
+        ListNode* slow = head;
+        while(fast != nullptr && fast->next != nullptr) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast == slow) {
+                fast = head;
+                while(fast != slow ) {  // x = z
+                    fast = fast->next;
+                    slow = slow->next;
+                }
+                return fast;
+            } 
+        }
+        return nullptr;
+    }
+```
 
+### 7.6 leetcode  合并两个有序链表
+题目描述： \
+将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 \
+示例1:
+![](https://assets.leetcode.com/uploads/2020/10/03/merge_ex1.jpg)
+题解： \
+``` C++
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* pCur = dummyNode;
+        ListNode* pL1 = list1;
+        ListNode* pL2 = list2;
+        while(pL1 != nullptr && pL2 != nullptr) {
+            if(pL1->val < pL2->val) {
+                pCur->next = pL1;
+                pCur = pL1;
+                pL1 = pL1->next;
+            } else {
+                pCur->next = pL2;
+                pCur = pL2;
+                pL2 = pL2->next; 
+            }
+        }
+        if(pL1 != nullptr) {
+            pCur->next = pL1;
+        } else {
+            pCur->next = pL2;
+        }
+        return dummyNode->next;
+    }
+```
+### 7.7 leetcode 2 两数相加
+题目描述: \
+给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+请你将两个数相加，并以相同形式返回一个表示和的链表。 
+你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/01/02/addtwonumber1.jpg)
+示例1： \
+输入：l1 = [2,4,3], l2 = [5,6,4] \
+输出：[7,0,8] \
+解释：342 + 465 = 807. \
+```C++
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) { 
+        if(l1 == nullptr) return l2;
+        if(l2 == nullptr) return l1;
+        int sum = 0;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* pCur = dummyNode;
+        ListNode* pL1 = l1;
+        ListNode* pL2 = l2;
+        while(pL1 != nullptr && pL2 != nullptr) {
+            int tempSum = pL1->val + pL2->val + sum;
+            sum = tempSum / 10;
+            tempSum = tempSum % 10;
+            ListNode* newNode = new ListNode(tempSum);
+            pCur->next = newNode;
+            pCur = newNode;
+            pL1 = pL1->next;
+            pL2 = pL2->next;
+        }
+        ListNode* pList = pL1 == nullptr ? pL2 : pL1;
+        while(pList != nullptr) {
+            int tempSum = pList->val + sum;
+            sum = tempSum / 10;
+            tempSum = tempSum % 10;
+            ListNode* newNode = new ListNode(tempSum);
+            pCur->next = newNode;
+            pCur = newNode;
+            pList = pList->next;
+        } 
+        if(sum != 0) {
+            ListNode* lastNode = new ListNode(sum);
+            pCur->next = lastNode;
+        }
+        return dummyNode->next;
+    }
+```
 
-
-
-
-
-
+### 7.8 leetcode 19 删除链表的第n个节点
+题目描述： \
+给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。 \
+示例1： \
+![](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
+输入：head = [1,2,3,4,5], n = 2 \
+输出：[1,2,3,5] \
+题解： 滑动窗口，维持一个内部有n个节点的窗口，一直滑动到末尾删除左侧节点即可\
+```C++
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dummyNode = new ListNode(-1);
+        dummyNode->next = head;
+        ListNode* pRight = dummyNode;
+        int count = 0;
+        while(count < n && pRight != nullptr) {
+            pRight = pRight->next;
+            count++;
+        }
+        if(pRight == nullptr) {
+            return nullptr;
+        }
+        ListNode* pLeft = dummyNode;
+        while(pRight->next != nullptr) {
+             pRight = pRight->next;
+             pLeft = pLeft->next;
+        }
+        pLeft->next = pLeft->next->next;
+        return dummyNode->next;
+    }
+```
+### 7.9 leetcode 24 两两交换链表中的节点
+题目描述: \
+给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。 \
+示例1： \
+![](https://assets.leetcode.com/uploads/2020/10/03/swap_ex1.jpg)
+输入：head = [1,2,3,4] \
+输出：[2,1,4,3] \
+题解： 节点间的交换，最好画图表示不然容易逻辑混乱\
+```C++
+    ListNode* swapPairs(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+        ListNode* dummyNode = new ListNode(-1);
+        dummyNode->next = head;
+        ListNode* pRight = dummyNode;
+        ListNode* pLeft = dummyNode;
+        while(pRight->next != nullptr) {
+            pRight = pRight->next;
+            if(pRight->next == nullptr) break;
+            pRight = pRight->next;
+            pLeft->next->next = pRight->next;  //先将后续节点保存好
+            pRight->next = pLeft->next;
+            pLeft->next = pRight;
+            pLeft = pLeft->next->next;
+            pRight = pLeft;
+        }
+        return dummyNode->next;
+    }
+```
 
 
 
