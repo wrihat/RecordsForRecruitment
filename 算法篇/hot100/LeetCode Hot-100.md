@@ -997,9 +997,84 @@ func rotate(matrix [][]int)  {
     }
 ```
 
+### 7.10 leetcode 25 k个一组反转链表
+题目描述: \
+给你链表的头节点 head ，每 k 个节点一组进行翻转，请你返回修改后的链表。
+k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+示例1： \
+![](https://assets.leetcode.com/uploads/2020/10/03/reverse_ex1.jpg)
+输入：head = [1,2,3,4,5], k = 2 \
+输出：[2,1,4,3,5] \
+题解: \
+```C++
+  ListNode* reverseKGroup(ListNode* head, int k){
+        if(head == nullptr) return nullptr;
+        ListNode* dummyNode = new ListNode(-1, head);  //使用辅助节点统一情况
+        ListNode* fast = dummyNode;
+        ListNode* slow = dummyNode;
+        while(true) {
+            for(int i = 0; i < k && fast != nullptr; i++) {
+                fast = fast->next;
+            }
+            if(fast == nullptr) break;              //不足k个一组
+            ListNode* nextStartPtr = slow->next;    //保存下一次迭代位置
+            ListNode* pre = fast->next;             //本次操作前置节点
+            fast = slow->next;                      //本次操作第一个操作节点
+            for(int i = 0; i < k; i++) {
+                ListNode* tmp = fast->next;
+                fast->next = pre;
+                pre = fast;
+                fast = tmp;
+            }
+            slow->next = pre;  // 连接上上一段
+            slow = nextStartPtr;  //更新起始位置
+            fast = nextStartPtr;
+        }
+        return dummyNode->next;
+  }
+```
 
+### 7.11 leetcode 138 随机链表的复制
+题目描述: \
+给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。
+构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。 \
+例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --> Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --> y 。
+返回复制链表的头节点。
+用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示： \
+val：一个表示 Node.val 的整数。 \
+random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为  null 。 \
+你的代码只接受原链表的头节点 head 作为传入参数。 \
+示例1 ：\
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/01/09/e1.png)
+输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]] \
+输出：[[7,null],[13,0],[11,4],[10,2],[1,0]] \
+题解: \
+```C++
+    unordered_map<Node*, Node*> cacheNode;  //使用哈希表记录<节点旧地址，节点新地址>
+    Node* copyRandomList(Node* head) {
+        if(head == nullptr) return nullptr;
+        if(!cacheNode.count(head)) {  //如果碰到没有保存的节点
+            Node* headNew = new Node(head->val);
+            cacheNode[head] = headNew;
+            headNew->next = copyRandomList(head->next);
+            headNext->random = copyRandomList(head->random);
+        }
+        return cacheNode[head];
+    }
+```
 
+### 7.12 leetcode 148 排序链表
+题目描述: \
+给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。\
+示例 1：\
+![](https://assets.leetcode.com/uploads/2020/09/14/sort_list_1.jpg)
+输入：head = [4,2,1,3] \
+输出：[1,2,3,4] \
+题解： \
+```C++
 
+```
 
 
 
