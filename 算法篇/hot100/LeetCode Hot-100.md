@@ -1071,19 +1071,270 @@ random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如�
 ![](https://assets.leetcode.com/uploads/2020/09/14/sort_list_1.jpg)
 输入：head = [4,2,1,3] \
 输出：[1,2,3,4] \
-题解： \
+题解： 
+朴素解法，冒泡
 ```C++
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr) return head;
+        bool flag = true;
+        ListNode* dummyNode = new ListNode(-1, head);
+        while(true) {
+            // 开始一趟排序
+            ListNode* curNode = dummyNode->next;
+            ListNode* pre = dummyNode;
+            flag = true;
+            while(curNode->next != nullptr) {
+                if(curNode->next->val < curNode->val) {
+                    //进行交换
+                    ListNode* tmp = curNode->next->next;
+                    pre->next = curNode->next;
+                    curNode->next->next = curNode;
+                    curNode->next = tmp;
+                    pre = pre->next;
+                    curNode = pre->next;
+                    flag = false;
+                } else {
+                    pre = pre->next;
+                    curNode = curNode->next;
+                }
+            }
+            if(flag) {
+                break;
+            }
+        }
+        return dummyNode->next;
+    }
+```
+优化版本，使用归并排序算法
+```C++
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+        //找到链表中点
+        ListNode* mid = getMid(head);
+        ListNode* left = head;
+        ListNode* right = mid->next;
+        mid->next = nullptr;    // 先断开链表
+        left = sortList(left);  // 排序左边链表
+        right = sortList(right); // 排序右边链表
+        return merge(left, right);
+    }
+    // **找到链表中点（快慢指针法）**
+    ListNode* getMid(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while(fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    // **合并两个有序链表**
+    ListNode* merge(ListNode* head1, ListNode* head2) {
+        ListNode* dummyHead = new ListNode(-1);
+        ListNode* cur = dummyHead;
+        ListNode* temp1 = head1;
+        ListNode* temp2 = head2;
+        while(temp1 != nullptr && temp2 != nullptr) {
+            if(temp1->val < temp2->val) {
+                cur->next = temp1;
+                temp1 = temp1->next;
+            } else {
+                cur->next = temp2;
+                temp2 = temp2->next;
+            }
+            cur = cur->next;
+        }
+        if(temp1 != nullptr) {
+            cur->next = temp1;
+        } else {
+            cur->next = temp2;
+        }
+        return dummyHead->next;
+    }
+```
+时间复杂度：O(N log N)
+空间复杂度：O(log N)（递归栈）
+稳定排序（不会改变相同元素的相对顺序）
 
+
+### 7.13 leetcode 23 合并k个升序链表
+题目描述： \
+给你一个链表数组，每个链表都已经按升序排列。
+请你将所有链表合并到一个升序链表中，返回合并后的链表。
+示例1：\
+输入：lists = [[1,4,5],[1,3,4],[2,6]] \
+输出：[1,1,2,3,4,4,5,6]\
+解释：链表数组如下：\
+[\
+  1->4->5,\
+  1->3->4,\
+  2->6\
+]\
+将它们合并到一个有序链表中得到。\
+1->1->2->3->4->4->5->6\
+题解：
+解法1 顺序合并，每次都将当前链表合并进结果链表中
+```C++
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size() == 0 ) return nullptr;
+        ListNode* ansHead = nullptr;
+        for(int i = 0 ; i < lists.size(); i++) {
+            ansHead = merge2Lists(ansHead, lists[i]);
+        }
+        return ansHead;
+    }
+    ListNode* merge2Lists(ListNode* head1, ListNode* head2) {
+        if((!head1) || (!head2)) return head1 ? head1: head2;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* cur = dummyNode;
+        ListNode* temp1 = head1;
+        ListNode* temp2 = head2;
+        while(temp1 && temp2) {
+            if(temp1->val < temp2->val) {
+                cur->next = temp1;
+                temp1 = temp1->next;
+            } else {
+                cur->next = temp2;
+                temp2 = temp2->next;
+            }
+            cur = cur->next;
+        }
+        if(temp1) {
+            cur->next = temp1;
+        } else {
+            cur->next = temp2;
+        }
+        return dummyNode->next;
+    }
+```
+解法2，使用归并分治思路
+```C++
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        return merge(lists, 0, lists.size() - 1);
+    }
+    ListNode* merge(vector<ListNode*>& lists, int left, int right) {
+        if(left == right) return lists[left];
+        if(left > right) return nullptr;
+        int mid = (left + right) >> 1; // 除以2
+        return merge2Lists(merge(lists, left, mid), merge(lists, mid + 1, right));
+    }
+
+    ListNode* merge2Lists(ListNode* head1, ListNode* head2) {
+        if((!head1) || (!head2)) return head1 ? head1: head2;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* cur = dummyNode;
+        ListNode* temp1 = head1;
+        ListNode* temp2 = head2;
+        while(temp1 && temp2) {
+            if(temp1->val < temp2->val) {
+                cur->next = temp1;
+                temp1 = temp1->next;
+            } else {
+                cur->next = temp2;
+                temp2 = temp2->next;
+            }
+            cur = cur->next;
+        }
+        if(temp1) {
+            cur->next = temp1;
+        } else {
+            cur->next = temp2;
+        }
+        return dummyNode->next;
+    }
+```
+
+### 7.14 leetcode 146 LRU缓存
+题目描述: \
+请你设计并实现一个满足  LRU (最近最少使用) 缓存 约束的数据结构。\
+实现 LRUCache 类：\
+LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存\
+int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 。\
+void put(int key, int value) 如果关键字 key 已经存在，则变更其数据值 value ；如果不存在，则向缓存中插入该组 key-value 。如果插入操作导致关键字数量超过 capacity ，则应该 逐出 最久未使用的关键字。\
+函数 get 和 put 必须以 O(1) 的平均时间复杂度运行。 \
+示例: \
+输入
+["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]\
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]\
+输出\
+[null, null, null, 1, null, -1, null, -1, 3, 4]\
+解释：\
+LRUCache lRUCache = new LRUCache(2);\
+lRUCache.put(1, 1); // 缓存是 {1=1}\
+lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}\
+lRUCache.get(1);    // 返回 1\
+lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}\
+lRUCache.get(2);    // 返回 -1 (未找到)\
+lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}\
+lRUCache.get(1);    // 返回 -1 (未找到)\
+lRUCache.get(3);    // 返回 3\
+lRUCache.get(4);    // 返回 4\
+题解：
+```C++
+class LRUCache {
+public:
+    LRUCache(int capacity) {
+        m_capacity = capacity;
+    }
+    
+    int get(int key) {
+        if(m_hashTable.count(key) == 0) return -1;
+        auto iter = m_hashTable[key];
+        m_items.splice(m_items.begin(), m_items, iter);  // 将指定元素移动到最前面，注意std::list中方法splice的使用
+        return iter->second;
+    }
+    
+    void put(int key, int value) {
+        if(m_hashTable.find(key) != m_hashTable.end()) {
+            auto iter = m_hashTable[key];
+            iter->second = value;
+            m_items.splice(m_items.begin(), m_items, iter);
+            return;
+        }
+        if(m_items.size() >= m_capacity) {  //如果已经达到容量上限，则删除最后一个
+            auto delKey = m_items.back().first;
+            m_hashTable.erase(delKey);
+            m_items.pop_back();
+        }
+        m_items.push_front({key, value});
+        m_hashTable[key] = m_items.begin();
+    }
+private:
+    unordered_map<int, list<pair<int, int>>::iterator> m_hashTable;  // <key, iter>
+    list<pair<int, int>> m_items;
+    size_t m_capacity;
+};
 ```
 
 
 
-
-
-
-
 ## 8 二叉树
+### 8.1 leetcode 94 二叉树的中序遍历
+题目描述: \
+给定一个二叉树的根节点 root，返回 它的中序遍历。\
+示例1：
+![](https://assets.leetcode.com/uploads/2020/09/15/inorder_1.jpg)
+输入：root = [1,null,2,3]\
+输出：[1,3,2]\
+题解：
+方法1 直接递归法\
+```cpp
+    vector<int> ans;
+    void inOrderedTrace(TreeNode* root) {
+        if(root == nullptr) return;
+        inOrderedTrace(root->left);
+        ans.push_back(root->val);
+        inOrderedTrace(root->right);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        inOrderedTrace(root);
+        return ans;
+    }
+```
+方法2 非递归法
+```cpp
 
+```
 
 
 
