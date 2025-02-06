@@ -1333,11 +1333,56 @@ private:
 ```
 方法2 非递归法
 ```cpp
+vector<int> inOrderedTrace(TreeNode* root) {
+    TreeNode* cur = root;
+    stack<TreeNode*> st;
+    vector<int> vec;
+    while(cur != nullptr || !st.empty()){
+        if(cur != nullptr) {  // 如果还没有遍历到叶子节点，则继续遍历
+            st.push(cur);
+            cur = cur->left;
+        } else {
+            cur = st.top();
+            st.pop();
+            vec.push_back(cur->val);
+            cur = cur->right;
+        }
+    }
+    return vec;
+}
 
 ```
 
+### 8.2 leetcode 104 二叉树的最大深度
+题目描述：\
+给定一个二叉树 root ，返回其最大深度。
+二叉树的 最大深度 是指从根节点到最远叶子节点的最长路径上的节点数。
+示例1：
+![](https://assets.leetcode.com/uploads/2020/11/26/tmp-tree.jpg)
+输入：root = [3,9,20,null,null,15,7]\
+输出：3
+题解：直接使用前序遍历即可
+```cpp
+    int preorderTree(TreeNode* root, int depth) {
+        if(root == nullptr) return depth;
+        return max(preorderTree(root->left, depth + 1), preorderTree(root->right, depth + 1));
+    } 
+    int maxDepth(TreeNode* root) {
+        return preorderTree(root, 0);
+    }
+```
 
+### 8.3 leetcode 226 翻转二叉树
+题目描述:\
+给你一棵二叉树的根节点 root ，翻转这棵二叉树，并返回其根节点。
+示例1：
+![](https://assets.leetcode.com/uploads/2021/03/14/invert1-tree.jpg)
+输入：root = [4,2,7,1,3,6,9]\
+输出：[4,7,2,9,6,3,1]
+题解：
+```cpp
 
+```
 
 
 
