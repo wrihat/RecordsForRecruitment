@@ -1379,10 +1379,56 @@ vector<int> inOrderedTrace(TreeNode* root) {
 ![](https://assets.leetcode.com/uploads/2021/03/14/invert1-tree.jpg)
 输入：root = [4,2,7,1,3,6,9]\
 输出：[4,7,2,9,6,3,1]
-题解：
+题解：直接从上往下递归反转即可
+```cpp
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == nullptr) return root;
+        swap(root->left, root->right);
+        invertTree(root->left);
+        invertTree(root->right);
+        return root;
+    }
+```
+
+### 8.4 leetcode 101 对称二叉树
+题目描述：\
+给你一个二叉树的根节点 root ， 检查它是否轴对称。\
+示例1：\
+![](https://pic.leetcode.cn/1698026966-JDYPDU-image.png)
+输入：root = [1,2,2,3,4,4,3]\
+输出：true\
+题解：\
+使用迭代方式，针对左子树和右子树对称的位置判断节点值是否相等
+```cpp
+    bool isSymmetricTree(TreeNode* leftTree, TreeNode* rightTree) {
+        if(leftTree == nullptr && rightTree == nullptr) return true;
+        if((leftTree == nullptr && rightTree != nullptr) || (leftTree != nullptr && rightTree == nullptr) || leftTree->val != rightTree->val) return false;
+        bool left = isSymmetricTree(leftTree->left, rightTree->right);
+        bool right = isSymmetricTree(leftTree->right, rightTree->left);
+        if(left == false || right == false) return false;
+        return true;
+    } 
+    bool isSymmetric(TreeNode* root) {
+        if(root == nullptr) return false;
+        if(root->left == nullptr && root->right == nullptr) return true;
+        return isSymmetricTree(root->left, root->right);
+    }
+```
+### 8.5 leetcode 543 二叉树的直径
+题目描述：\
+给你一棵二叉树的根节点，返回该树的 直径 。
+二叉树的 直径 是指树中任意两个节点之间最长路径的 长度 。这条路径可能经过也可能不经过根节点 root 。
+两节点之间路径的 长度 由它们之间边数表示。\
+示例1：\
+![](https://assets.leetcode.com/uploads/2021/03/06/diamtree.jpg)
+输入：root = [1,2,3,4,5]\
+输出：3\
+解释：3 ，取路径 [4,2,1,3] 或 [5,2,1,3] 的长度。\
+题解：\
 ```cpp
 
 ```
+
 
 
 
