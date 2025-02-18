@@ -1381,8 +1381,102 @@ vector<int> inOrderedTrace(TreeNode* root) {
 输出：[4,7,2,9,6,3,1]
 题解：
 ```cpp
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == nullptr) return root;
+        swap(root->left, root->right);
+        invertTree(root->left);
+        invertTree(root->right);
+        return root;
+    }
+```
+
+
+### 8.4 leetcode 101 对称二叉树
+题目描述:\
+给你一个二叉树的根节点 root ， 检查它是否轴对称。\
+示例1：
+![](https://pic.leetcode.cn/1698026966-JDYPDU-image.png)
+题解：
+```cpp
+    bool isSymmetricTree(TreeNode* leftTree, TreeNode* rightTree) {
+        if(leftTree == nullptr && rightTree == nullptr) return true;
+        if((leftTree == nullptr && rightTree != nullptr) || (leftTree != nullptr && rightTree == nullptr) || leftTree->val != rightTree->val) return false;
+        bool left = isSymmetricTree(leftTree->left, rightTree->right);
+        bool right = isSymmetricTree(leftTree->right, rightTree->left);
+        if(left == false || right == false) return false;
+        return true;
+    } 
+    bool isSymmetric(TreeNode* root) {
+        if(root == nullptr) return false;
+        if(root->left == nullptr && root->right == nullptr) return true;
+        return isSymmetricTree(root->left, root->right);
+    }
+```
+
+### 8.5 leetcode 543 二叉树的直径
+题目描述：\
+给你一棵二叉树的根节点，返回该树的直径。
+二叉树的直径是指树中任意两个节点之间最长路径的长度。这条路径可能经过也可能不经过根节点root。
+两节点之间路径的长度由它们之间边数表示。\
+示例：
+![](https://assets.leetcode.com/uploads/2021/03/06/diamtree.jpg)
+题解：
+```cpp
+    int ans;
+    int depth(TreeNode* root) {
+        if(root == nullptr) return 0;
+        int leftDepth = depth(root->left);
+        int rightDepth = depth(root->right);
+        ans = max(ans, leftDepth + rightDepth + 1);
+        return max(leftDepth, rightDepth) + 1;
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        ans = 1;
+        depth(root);
+        return ans - 1;
+    }
+```
+
+### 8.6 leetcode 102 二叉树的层序遍历
+题目：\
+给你二叉树的根节点root，返回其节点值的层序遍历。（即逐层地，从左到右访问所有节点）。
+示例：\
+![](https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg)
+题解：
+```cpp
+    vector<vector<int>> levelOrder(TreeNode* root) {
+    queue<TreeNode*> que;
+    vector<vector<int>> vec;
+    if(root == nullptr) return vec;
+    que.push(root);
+    while(!que.empty()) {
+        vector<TreeNode*> levelNodes;
+        vector<int> levelVals;
+        while(!que.empty()) {
+            levelVals.push_back(que.front()->val);
+            levelNodes.push_back(que.front());
+            que.pop();
+        }
+        vec.push_back(levelVals);
+        for(int i = 0; i < levelNodes.size(); i++) {
+            if(levelNodes[i]->left) que.push(levelNodes[i]->left);
+            if(levelNodes[i]->right) que.push(levelNodes[i]->right);
+        }
+    }
+    return vec;
+    }
+```
+
+### 8.7 leetcode 108 将有序数组转换成二叉搜索树
+题目描述：\
+给你一个整数数组nums，其中元素已经按升序排列，请你将其转换为一棵平衡二叉搜索树。\
+示例：\
+![](https://assets.leetcode.com/uploads/2021/02/18/btree1.jpg)
+```cpp
 
 ```
+
+
 
 
 
