@@ -1438,7 +1438,7 @@ vector<int> inOrderedTrace(TreeNode* root) {
 ```
 
 ### 8.6 leetcode 102 二叉树的层序遍历
-题目：\
+题目描述：\
 给你二叉树的根节点root，返回其节点值的层序遍历。（即逐层地，从左到右访问所有节点）。
 示例：\
 ![](https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg)
@@ -1471,12 +1471,162 @@ vector<int> inOrderedTrace(TreeNode* root) {
 题目描述：\
 给你一个整数数组nums，其中元素已经按升序排列，请你将其转换为一棵平衡二叉搜索树。\
 示例：\
+输入：nums = [-10,-3,0,5,9]\
+输出：[0,-3,9,-10,null,5]\
 ![](https://assets.leetcode.com/uploads/2021/02/18/btree1.jpg)
+解释：[0,-10,5,null,-3,null,9] 也将被视为正确答案：\
+![](https://assets.leetcode.com/uploads/2021/02/18/btree2.jpg)
 ```cpp
+    TreeNode* helper(vector<int>& nums, int left, int right) {
+        if(left > right) return nullptr;
+        int rootIndex = (left + right) / 2;
+        TreeNode* root = new TreeNode(nums[rootIndex]);
+        root->left = helper(nums, left, rootIndex - 1);
+        root->right = helper(nums, rootIndex + 1, right);
+        return root;
+    }
 
+    TreeNode* sortedArrayToBST(vector<int>& nums) {  //二叉搜索树也叫二叉排序树, 平衡二叉搜索树需要保持高度一致
+       return helper(nums, 0, nums.size() - 1);
+    }
+```
+### 8.8 leetcode 98 验证二叉搜索树
+题目描述：\
+给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。
+有效 二叉搜索树定义如下：
+* 节点的左子树只包含 小于 当前节点的数。
+* 节点的右子树只包含 大于 当前节点的数。
+* 所有左子树和右子树自身必须也是二叉搜索树。
+
+示例：
+
+![](https://assets.leetcode.com/uploads/2020/12/01/tree1.jpg)\
+输入：root = [2,1,3]\
+输出：true
+```cpp
+    bool helper(TreeNode* root, long long lower, long long upper) {
+        if(root == nullptr) {
+            return true;
+        }
+        if(root->val <= lower || root->val >= upper) {
+            return false;
+        }
+        return helper(root->left, lower, root->val) && helper(root->right, root->val, upper);
+    }
+    bool isValidBST(TreeNode* root) {
+        return helper(root, LONG_MIN, LONG_MAX);
+    }
+```
+### 8.9 leetcode 230 二叉搜索树中第k小的数
+题目描述：\
+给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 小的元素（从 1 开始计数）。\
+![](https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg)
+题解：
+```cpp
+        int ans;
+        void inOrderTrace(TreeNode* root, int k) {
+            if(root == nullptr) return;
+            if(root->left) {
+                inOrderTrace(root->left, k);
+            }
+            count++;  // 处理根节点
+            if(count == k) {
+                ans = root->val;
+                return;
+            }
+            if(root->right) {
+                inOrderTrace(ro ot->right, k);
+            }
+
+        }
+        int kthSmallest(TreeNode* root, int k) {
+            count = 0;
+            ans = -1;
+            inOrderTrace(root, k);
+            return ans;
+        }
 ```
 
+### 8.10 leetcode 199 二叉树的右视图
+题目描述：\
+给定一个二叉树的 根节点 root，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+示例：\
+输入：root = [1,2,3,null,5,null,4]\
+输出：[1,3,4]\
+![](https://assets.leetcode.com/uploads/2024/11/24/tmpd5jn43fs-1.png)
+题解：使用层次遍历，取每一层的最右边的节点即可
+```cpp
+    vector<int> rightSideView(TreeNode* root) {
+        // 层次遍历，取最右边的节点数据
+        queue<TreeNode*> que;
+        vector<int> ans;
+        if(root == nullptr) return ans;
+        que.push(root);
+        while(!que.empty()) {
+            TreeNode* rightNode = que.back();
+            ans.push_back(rightNode->val);
+            int levelSize = que.size();
+            for(int i = 0; i < levelSize;i++) {
+                if(que.front()->left) que.push(que.front()->left);
+                if(que.front()->right) que.push(que.front()->right);
+                que.pop();
+            }
+        }
+        return ans;
+    }
+```
+解法二：深搜，每次都先访问右子树那么，对于每一层来说这一层见到的第一个节点就是最右边的节点。（官方解）
+```cpp
+    vector<int> rightSideView(TreeNode* root) {
+        unordered_map<int, int> rightmostValueAtDepth;
+        int max_depth = -1;
 
+        stack<TreeNode*> nodeStack;
+        stack<int> depthStack;
+        nodeStack.push(root);
+        depthStack.push(0);
+
+        while (!nodeStack.empty()) {
+            TreeNode* node = nodeStack.top();nodeStack.pop();
+            int depth = depthStack.top();depthStack.pop();
+
+            if (node != NULL) {
+            	// 维护二叉树的最大深度
+                max_depth = max(max_depth, depth);
+
+                // 如果不存在对应深度的节点我们才插入
+                if (rightmostValueAtDepth.find(depth) == rightmostValueAtDepth.end()) {
+                    rightmostValueAtDepth[depth] =  node -> val;
+                }
+
+                nodeStack.push(node -> left);
+                nodeStack.push(node -> right);
+                depthStack.push(depth + 1);
+                depthStack.push(depth + 1);
+            }
+        }
+        vector<int> rightView;
+        for (int depth = 0; depth <= max_depth; ++depth) {
+            rightView.push_back(rightmostValueAtDepth[depth]);
+        }
+
+        return rightView;
+    }
+```
+
+### 8.11 leetcode 114 二叉树展开为链表
+题目描述：\
+展开后的单链表应该同样使用 TreeNode ，其中 right 子指针指向链表中下一个结点，而左子指针始终为 null 。
+展开后的单链表应该与二叉树 先序遍历 顺序相同。\
+示例：\
+输入：root = [1,2,5,3,4,null,6]\
+输出：[1,null,2,null,3,null,4,null,5,null,6]\
+![](https://assets.leetcode.com/uploads/2021/01/14/flaten.jpg)
+题解：\
+```cpp
+
+
+```
 
 
 
